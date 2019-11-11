@@ -40,7 +40,7 @@ import java.util.Map;
 public class SettingsActivity extends AppCompatActivity {
 
     private EditText mName, mPhone;
-    private Button mBack, mConfirm;
+    private Button mBack, mConfirm, mSignOut;
 
     private ImageView mProfileImage;
 
@@ -63,6 +63,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         mConfirm = (Button) findViewById(R.id.btConfirm);
         mBack = (Button) findViewById(R.id.btBack);
+        mSignOut = (Button) findViewById(R.id.btSignOut);
 
         mAuth = FirebaseAuth.getInstance();
         meowID = mAuth.getCurrentUser().getUid();
@@ -114,6 +115,17 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 saveMeowInfomation();
+            }
+        });
+        mSignOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAuth.signOut();
+                Intent intent = new Intent(SettingsActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+                return;
+
             }
         });
     }

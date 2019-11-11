@@ -16,18 +16,20 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:paddingLeft="15dp"
         android:background="@drawable/edit_text_simple"
         android:layout_marginBottom="30sp"
         android:layout_marginHorizontal="40sp"
-        android:hint="    Email....."
+        android:hint="Email....."
         android:id="@+id/etEmail"/>
     <EditText
         android:layout_width="match_parent"
         android:layout_marginHorizontal="40dp"
         android:layout_marginBottom="30sp"
         android:layout_height="50dp"
+        android:paddingLeft="15dp"
         android:background="@drawable/edit_text_simple"
-        android:hint="    Password....."
+        android:hint="Password....."
         android:inputType="textPassword"
         android:id="@+id/etPassword"/>
    <LinearLayout

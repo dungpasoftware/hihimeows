@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -21,6 +23,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
+import com.luseen.spacenavigation.SpaceItem;
+import com.luseen.spacenavigation.SpaceNavigationView;
+import com.luseen.spacenavigation.SpaceOnClickListener;
 import com.notpad.hihimeow.adapters.MeowAdapter;
 import com.notpad.hihimeow.utils.Meow;
 
@@ -28,7 +33,6 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button mSignOut, mSettings, mMatches;
 
     private ArrayList<Meow> meows;
     private MeowAdapter meowAdapter;
@@ -41,51 +45,59 @@ public class MainActivity extends AppCompatActivity {
 
     ListView listView;
 
+    SpaceNavigationView spaceNavigationView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE); //will hide the title
+        getSupportActionBar().hide(); // hide the title bar
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN); //enable full screen
+
         setContentView(R.layout.activity_main);
+
+        // custom navbar
+        spaceNavigationView = (SpaceNavigationView) findViewById(R.id.space);
+        spaceNavigationView.initWithSaveInstanceState(savedInstanceState);
+        spaceNavigationView.addSpaceItem(new SpaceItem("", R.drawable.ic_settings_black_24dp));
+        spaceNavigationView.addSpaceItem(new SpaceItem("", R.drawable.ic_chat_black_24dp));
+
+
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         currMeow = mAuth.getCurrentUser();
 
-        mSignOut = (Button) findViewById(R.id.btSignOut);
-        mSettings = (Button) findViewById(R.id.btSettings);
-        mMatches = (Button) findViewById(R.id.btMatches);
 
         meows = new ArrayList<>();
 
 
-        mMatches.setOnClickListener(new View.OnClickListener() {
+        spaceNavigationView.setSpaceOnClickListener(new SpaceOnClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, MatchesActivity.class);
+            public void onCentreButtonClick() {
+                Toast.makeText(MainActivity.this,"onCentreButtonClick", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onItemClick(int itemIndex, String itemName) {
+                Intent intent = null;
+                if(itemIndex == 0){ //setting
+                    intent = new Intent(MainActivity.this, SettingsActivity.class);
+                }else{
+                    intent = new Intent(MainActivity.this, MatchesActivity.class);
+                }
                 startActivity(intent);
                 return;
+            }
+
+            @Override
+            public void onItemReselected(int itemIndex, String itemName) {
+                Toast.makeText(MainActivity.this, itemIndex + " " + itemName, Toast.LENGTH_SHORT).show();
             }
         });
 
-        mSignOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAuth.signOut();
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                startActivity(intent);
-                finish();
-                return;
-            }
-        });
-
-        mSettings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-                startActivity(intent);
-                return;
-            }
-        });
 
         checkMeowSex();
 

@@ -27,16 +27,29 @@
         android:hint="Phone"
         android:layout_marginBottom="20sp"
         android:inputType="phone"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/btConfirm"
+            android:text="Confirm"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/btBack"
+            android:text="Back"/>
+
+    </LinearLayout>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/btConfirm"
-        android:text="Confirm"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/btBack"
-        android:text="Back"/>
+        android:text="Sign Out"
+        android:id="@+id/btSignOut"/>
 
 
 </LinearLayout>

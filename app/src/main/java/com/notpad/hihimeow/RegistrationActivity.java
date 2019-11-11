@@ -82,6 +82,8 @@ public class RegistrationActivity extends AppCompatActivity {
                 final String password = mPassword.getText().toString();
                 final String name = mName.getText().toString();
                 final String gender = radioButton.getText().toString();
+                final String imageUrl = gender.equals("Male") ? "https://firebasestorage.googleapis.com/v0/b/hihimeow-460fa.appspot.com/o/profileImages%2Fmale_cat.jpg?alt=media&token=ce38aef0-1720-4e6d-803d-118b9d804149"
+                        : "https://firebasestorage.googleapis.com/v0/b/hihimeow-460fa.appspot.com/o/profileImages%2Ffemale_cat.jpg?alt=media&token=ec39a436-d9ef-407b-b7cb-025d05ed660a";
                 //tạo account trên firebase bằng email
                 mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(RegistrationActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -93,7 +95,7 @@ public class RegistrationActivity extends AppCompatActivity {
                             Map meowInfo = new HashMap<>();
                             meowInfo.put("name", name);
                             meowInfo.put("sex", gender );
-                            meowInfo.put("profileImageUrl", "default");
+                            meowInfo.put("profileImageUrl", imageUrl);
 
                             currentUserDb.child("Meows").child(userId).updateChildren(meowInfo);
 

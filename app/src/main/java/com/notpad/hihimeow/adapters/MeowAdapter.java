@@ -35,11 +35,6 @@ public class MeowAdapter extends ArrayAdapter<Meow> {
         ImageView mImage = (ImageView) convertView.findViewById(R.id.imageMeow);
 
         mName.setText(meow.getName());
-        switch (meow.getProfileImageUrl()){
-            case "default":
-                Glide.with(getContext()).load(R.mipmap.ic_launcher).into(mImage); break;
-             default: Glide.with(getContext()).load(meow.getProfileImageUrl()).into(mImage); break;
-        }
         Glide.with(getContext()).load(meow.getProfileImageUrl()).into(mImage);
 
         return convertView;

@@ -196,10 +196,9 @@ public class HomeFragment extends Fragment {
                 if(dataSnapshot.exists() && !dataSnapshot.child("connections").child("nope").hasChild(currMeow.getUid()) &&
                         !dataSnapshot.child("connections").child("yep").hasChild(currMeow.getUid()) &&
                         dataSnapshot.child("sex").getValue().toString().equals(oppositeMeowSex)){
-                    String profileImageUrl = "default";
-                    if(!dataSnapshot.child("profileImageUrl").getValue().toString().equals("default")){
-                        profileImageUrl = dataSnapshot.child("profileImageUrl").getValue().toString();
-                    }
+
+                    String profileImageUrl = dataSnapshot.child("profileImageUrl").getValue().toString();
+
                     meows.add(new Meow(dataSnapshot.getKey(), dataSnapshot.child("name").getValue().toString(),  profileImageUrl));
                     meowAdapter.notifyDataSetChanged();
                 }

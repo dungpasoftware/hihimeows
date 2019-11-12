@@ -22,6 +22,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -51,7 +54,9 @@ public class SettingFragment extends Fragment {
     private View view;
 
     private EditText mName, mPhone;
-    private Button mBack, mConfirm, mSignOut;
+    private Button  mSignOut;
+    private RadioButton mMale;
+    private RadioButton mFemale;
 
     private ImageView mProfileImage;
 
@@ -59,6 +64,7 @@ public class SettingFragment extends Fragment {
     private DatabaseReference mMeowDatabase;
 
     private String meowID, name, phone, sex, profileImageUrl;
+
 
 
 
@@ -79,11 +85,12 @@ public class SettingFragment extends Fragment {
 
         mName = (EditText) view.findViewById(R.id.etName);
         mPhone = (EditText) view.findViewById(R.id.etPhone);
+        mMale = (RadioButton) view.findViewById(R.id.rbMaleInSetting);
+        mFemale = (RadioButton) view.findViewById(R.id.rbFemaleInSetting);
 
         mProfileImage = (ImageView) view.findViewById(R.id.imgProfile);
 
-        mConfirm = (Button) view.findViewById(R.id.btConfirm);
-        mBack = (Button) view.findViewById(R.id.btBack);
+
         mSignOut = (Button) view.findViewById(R.id.btSignOut);
 
         mAuth = FirebaseAuth.getInstance();
@@ -125,19 +132,7 @@ public class SettingFragment extends Fragment {
                 }
             }
         });
-        mBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().finish();
-                return;
-            }
-        });
-        mConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveMeowInfomation();
-            }
-        });
+
         mSignOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -151,6 +146,12 @@ public class SettingFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        saveMeowInfomation();
     }
 
     private void getMeowInfo() {
@@ -169,6 +170,12 @@ public class SettingFragment extends Fragment {
                     }
                     if(map.get("sex") != null){
                         sex = map.get("sex").toString();
+                        if(sex.equals("Male")){
+                            mMale.toggle();
+                        }else{
+                            mFemale.toggle();
+                        }
+
                     }
                     if(map.get("profileImageUrl") != null){
                         profileImageUrl = map.get("profileImageUrl").toString();
@@ -189,10 +196,12 @@ public class SettingFragment extends Fragment {
     private void saveMeowInfomation() {
         name = mName.getText().toString();
         phone = mPhone.getText().toString();
+        sex = mMale.isChecked() ? "Male" : "Female";
 
         Map meowInfo = new HashMap();
         meowInfo.put("name", name);
         meowInfo.put("phone", phone);
+        meowInfo.put("sex", sex);
         mMeowDatabase.updateChildren(meowInfo);
         //upload image to firestore
         if(resultUri != null){
@@ -207,6 +216,7 @@ public class SettingFragment extends Fragment {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
             byte[] data = baos.toByteArray();
+
             UploadTask uploadTask = filePath.putBytes(data);
             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -217,21 +227,15 @@ public class SettingFragment extends Fragment {
                             Map newImage = new HashMap();
                             newImage.put("profileImageUrl", uri.toString());
                             mMeowDatabase.updateChildren(newImage);
-
-                            getActivity().finish();
-                            return;
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception exception) {
-                            getActivity().finish();
-                            return;
+                            Toast.makeText(getContext(), "ADD IMAGE FAIL", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
             });
-        }else{
-            getActivity().finish();
         }
     }
 

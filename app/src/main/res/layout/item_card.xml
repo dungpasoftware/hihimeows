@@ -18,28 +18,27 @@
         app:cardCornerRadius="4dp"
         android:elevation="2dp"
         android:id="@+id/cardView">
-        <LinearLayout
+        <RelativeLayout
             android:layout_gravity="center"
             android:layout_width="360dp"
-            android:layout_height="350dp"
-            android:orientation="vertical"
+            android:layout_height="500dp"
             >
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="match_parent"
                 android:id="@+id/imageMeow"
                 android:scaleType="centerCrop"/>
             <TextView
                 android:id="@+id/nameMeow"
                 android:textSize="40sp"
                 android:paddingLeft="20sp"
-                android:textColor="@android:color/black"
-                android:gravity="center|left"
+                android:textColor="@android:color/white"
+                android:layout_alignParentBottom="true"
                 tools:text="Hello"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="wrap_content" />
 
-        </LinearLayout>
+        </RelativeLayout>
 
 
     </androidx.cardview.widget.CardView>

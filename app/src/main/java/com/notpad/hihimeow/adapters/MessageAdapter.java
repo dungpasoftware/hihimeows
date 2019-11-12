@@ -2,6 +2,7 @@ package com.notpad.hihimeow.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,13 +42,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolders> {
     public void onBindViewHolder(@NonNull MessageViewHolders holder, int position) {
         holder.mMessage.setText(messageList.get(position).getMessage());
         if(messageList.get(position).isMessOfCurrMeow()){
-            holder.mMessage.setGravity(Gravity.END);
-            holder.mMessage.setTextColor(Color.parseColor("#000000"));
-            holder.mSimpleText.setBackgroundColor(Color.parseColor("#ffff91"));
+            holder.mSimpleText.setGravity(Gravity.END);
+            holder.mMessage.setBackgroundColor(Color.GRAY);
+            holder.mMessage.setBackgroundResource(R.drawable.im_message_background);
+
         }else {
-            holder.mMessage.setGravity(Gravity.START);
-            holder.mMessage.setTextColor(Color.parseColor("#000000"));
-            holder.mSimpleText.setBackgroundColor(Color.parseColor("#ffff91"));
+            holder.mSimpleText.setGravity(Gravity.START);
+            holder.mMessage.setBackgroundResource(R.drawable.your_message_background);
+            holder.mMessage.setTextColor(Color.BLACK);
         }
     }
 

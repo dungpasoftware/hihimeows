@@ -1,27 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:orientation="vertical">
+    tools:context=".MainActivity">
 
-
-    <com.lorentzos.flingswipe.SwipeFlingAdapterView
-        android:id="@+id/frame"
-        android:background="@android:color/white"
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="8"
-        app:rotation_degrees="15.5"
-        tools:context=".MyActivity" />
+        android:layout_height="match_parent"
+        android:layout_above="@+id/spaceMain"/>
+
     <com.luseen.spacenavigation.SpaceNavigationView
-        android:id="@+id/space"
-        android:layout_weight="2"
+        android:id="@+id/spaceMain"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_gravity="bottom"
+        android:layout_alignParentBottom="true"
         app:active_item_color="@color/love"
         app:inactive_item_color="@color/gray"
 
@@ -38,4 +34,4 @@
         app:space_item_icon_size="30dp"
         app:space_item_icon_only_size="@dimen/space_item_icon_only_size"/>
 
-</LinearLayout>
+</RelativeLayout>

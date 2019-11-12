@@ -1,10 +1,5 @@
 package com.notpad.hihimeow;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.Activity;
@@ -13,8 +8,17 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+
 import android.provider.MediaStore;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -31,13 +35,20 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.luseen.spacenavigation.SpaceNavigationView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SettingsActivity extends AppCompatActivity {
+
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class SettingFragment extends Fragment {
+
+    private View view;
 
     private EditText mName, mPhone;
     private Button mBack, mConfirm, mSignOut;
@@ -49,21 +60,31 @@ public class SettingsActivity extends AppCompatActivity {
 
     private String meowID, name, phone, sex, profileImageUrl;
 
+
+
     private Uri resultUri;
 
+
+
+    public SettingFragment() {
+        // Required empty public constructor
+    }
+
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        view = inflater.inflate(R.layout.fragment_setting, container, false);
 
-        mName = (EditText) findViewById(R.id.etName);
-        mPhone = (EditText) findViewById(R.id.etPhone);
+        mName = (EditText) view.findViewById(R.id.etName);
+        mPhone = (EditText) view.findViewById(R.id.etPhone);
 
-        mProfileImage = (ImageView) findViewById(R.id.imgProfile);
+        mProfileImage = (ImageView) view.findViewById(R.id.imgProfile);
 
-        mConfirm = (Button) findViewById(R.id.btConfirm);
-        mBack = (Button) findViewById(R.id.btBack);
-        mSignOut = (Button) findViewById(R.id.btSignOut);
+        mConfirm = (Button) view.findViewById(R.id.btConfirm);
+        mBack = (Button) view.findViewById(R.id.btBack);
+        mSignOut = (Button) view.findViewById(R.id.btSignOut);
 
         mAuth = FirebaseAuth.getInstance();
         meowID = mAuth.getCurrentUser().getUid();
@@ -75,20 +96,20 @@ public class SettingsActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 // Here, thisActivity is the current activity
-                if (ContextCompat.checkSelfPermission(SettingsActivity.this,
+                if (ContextCompat.checkSelfPermission(getActivity(),
                         Manifest.permission.READ_EXTERNAL_STORAGE)
                         != PackageManager.PERMISSION_GRANTED) {
 
                     // Permission is not granted
                     // Should we show an explanation?
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(SettingsActivity.this,
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
                             Manifest.permission.READ_EXTERNAL_STORAGE)) {
                         // Show an explanation to the user *asynchronously* -- don't block
                         // this thread waiting for the user's response! After the user
                         // sees the explanation, try again to request the permission.
                     } else {
                         // No explanation needed; request the permission
-                        ActivityCompat.requestPermissions(SettingsActivity.this,
+                        ActivityCompat.requestPermissions(getActivity(),
                                 new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                                 100);
 
@@ -107,7 +128,7 @@ public class SettingsActivity extends AppCompatActivity {
         mBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                getActivity().finish();
                 return;
             }
         });
@@ -121,13 +142,15 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mAuth.signOut();
-                Intent intent = new Intent(SettingsActivity.this, LoginActivity.class);
+                Intent intent = new Intent(getContext(), LoginActivity.class);
                 startActivity(intent);
-                finish();
+                getActivity().finish();
                 return;
 
             }
         });
+
+        return view;
     }
 
     private void getMeowInfo() {
@@ -150,7 +173,7 @@ public class SettingsActivity extends AppCompatActivity {
                     if(map.get("profileImageUrl") != null){
                         profileImageUrl = map.get("profileImageUrl").toString();
 
-                        Glide.with(getApplication()).load(profileImageUrl).into(mProfileImage);
+                        Glide.with(getActivity().getApplication()).load(profileImageUrl).into(mProfileImage);
 
                     }
                 }
@@ -177,7 +200,7 @@ public class SettingsActivity extends AppCompatActivity {
             Bitmap bitmap = null;
 
             try {
-                bitmap = MediaStore.Images.Media.getBitmap(getApplication().getContentResolver(), resultUri);
+                bitmap = MediaStore.Images.Media.getBitmap(getActivity().getApplication().getContentResolver(), resultUri);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -195,26 +218,26 @@ public class SettingsActivity extends AppCompatActivity {
                             newImage.put("profileImageUrl", uri.toString());
                             mMeowDatabase.updateChildren(newImage);
 
-                            finish();
+                            getActivity().finish();
                             return;
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception exception) {
-                            finish();
+                            getActivity().finish();
                             return;
                         }
                     });
                 }
             });
         }else{
-            finish();
+            getActivity().finish();
         }
     }
 
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 1 && resultCode == Activity.RESULT_OK){
             final Uri imageUri = data.getData();
@@ -224,3 +247,4 @@ public class SettingsActivity extends AppCompatActivity {
 
     }
 }
+

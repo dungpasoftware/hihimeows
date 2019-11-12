@@ -1,12 +1,16 @@
 package com.notpad.hihimeow;
 
+
+import android.os.Bundle;
+
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-
-import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -20,7 +24,13 @@ import com.notpad.hihimeow.utils.Matches;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MatchesActivity extends AppCompatActivity {
+
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class MatchesFragment extends Fragment {
+
+     private View view;
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -28,28 +38,35 @@ public class MatchesActivity extends AppCompatActivity {
     private List<Matches> resultMatches;
     DatabaseReference mDatabase;
 
+
     private String currMeowID;
+    public MatchesFragment() {
+        // Required empty public constructor
+    }
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_matches);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        view = inflater.inflate(R.layout.fragment_matches, container, false);
+
 
         currMeowID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         resultMatches = new ArrayList<>();
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mRecyclerView.setNestedScrollingEnabled(false);
         mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(MatchesActivity.this);
+        mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         getMeowMatchID();
 
-        mAdapter = new MatchesAdapter(resultMatches, MatchesActivity.this);
+        mAdapter = new MatchesAdapter(resultMatches, getContext());
         mRecyclerView.setAdapter(mAdapter);
-
+        return view;
     }
 
     private void getMeowMatchID() {
@@ -102,3 +119,4 @@ public class MatchesActivity extends AppCompatActivity {
 
 
 }
+

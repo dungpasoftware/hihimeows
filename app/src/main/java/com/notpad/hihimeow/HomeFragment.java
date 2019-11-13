@@ -35,6 +35,9 @@ import com.notpad.hihimeow.adapters.MeowAdapter;
 import com.notpad.hihimeow.utils.Meow;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -141,12 +144,19 @@ public class HomeFragment extends Fragment {
                 if(dataSnapshot.exists()){
                     //tạo key phòng chat
                     String key = mDatabase.child("Messages").push().getKey();
-                    //khi cả 2 người match vào nhau thì tạo key của mình sang bên đối phương, và tạo key của đối phương vào mình
-                    mDatabase.child("Meows").child(dataSnapshot.getKey()).child("connections").child("matches").child(currMeow.getUid()).setValue(true);
-                    mDatabase.child("Meows").child(currMeow.getUid()).child("connections").child("matches").child(dataSnapshot.getKey()).setValue(true);
+//                    //khi cả 2 người match vào nhau thì tạo key của mình sang bên đối phương, và tạo key của đối phương vào mình
+//                    mDatabase.child("Meows").child(dataSnapshot.getKey()).child("connections").child("matches").child(currMeow.getUid()).setValue(true);
+//                    mDatabase.child("Meows").child(currMeow.getUid()).child("connections").child("matches").child(dataSnapshot.getKey()).setValue(true);
                     //set key định nghĩa phòng chat chung của 2 đứa
-                    mDatabase.child("Meows").child(dataSnapshot.getKey()).child("connections").child("matches").child(currMeow.getUid()).child("RoomID").setValue(key);
-                    mDatabase.child("Meows").child(currMeow.getUid()).child("connections").child("matches").child(dataSnapshot.getKey()).child("RoomID").setValue(key);
+                    Date currDate = new Date();
+                    String currTime = String.valueOf(currDate.getTime());
+                    Map startData = new HashMap();
+                    startData.put("RoomID", key);
+                    startData.put("lastMessage", "");
+                    startData.put("lastTime", currTime);
+
+                    mDatabase.child("Meows").child(dataSnapshot.getKey()).child("connections").child("matches").child(currMeow.getUid()).updateChildren(startData);
+                    mDatabase.child("Meows").child(currMeow.getUid()).child("connections").child("matches").child(dataSnapshot.getKey()).updateChildren(startData);
 
                     showDialogMatched(meow);
 

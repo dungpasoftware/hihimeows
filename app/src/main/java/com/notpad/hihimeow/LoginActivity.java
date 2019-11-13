@@ -66,15 +66,19 @@ public class LoginActivity extends AppCompatActivity {
                 final String email = mEmail.getText().toString();
                 final String password = mPassword.getText().toString();
 
-                mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(!task.isSuccessful()){
-                            Toast.makeText(LoginActivity.this, "Sign Up Error", Toast.LENGTH_SHORT);
+                if(!email.isEmpty() && !password.isEmpty()){
+                    mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if(!task.isSuccessful()){
+                                Toast.makeText(LoginActivity.this, task.getException().toString(), Toast.LENGTH_SHORT);
 
+                            }
                         }
-                    }
-                });
+                    });
+                }else{
+                    Toast.makeText(LoginActivity.this, "Please. Enter enough fields", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

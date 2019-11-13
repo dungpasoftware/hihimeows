@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.notpad.hihimeow.R;
 import com.notpad.hihimeow.utils.Matches;
 
@@ -38,6 +39,9 @@ public class MatchesAdapter  extends RecyclerView.Adapter<MatchesViewHolders> {
     public void onBindViewHolder(@NonNull MatchesViewHolders holder, int position) {
         holder.mMatchId.setText((matchesList.get(position).getMeowID()));
         holder.mMatchName.setText((matchesList.get(position).getMeowName()));
+        String imageProfile = matchesList.get(position).getMeowImageProfile();
+        holder.imageUrl = imageProfile;
+        Glide.with(context).load(imageProfile).into(holder.mMatchImage);
 
     }
 

@@ -17,6 +17,7 @@ public class MatchesViewHolders extends RecyclerView.ViewHolder implements View.
 
     public TextView mMatchId, mMatchName;
     public ImageView mMatchImage;
+    public String imageUrl;
     public MatchesViewHolders(@NonNull View itemView) {
         super(itemView);
         itemView.setOnClickListener(this);
@@ -32,6 +33,7 @@ public class MatchesViewHolders extends RecyclerView.ViewHolder implements View.
         Bundle b = new Bundle();
         b.putString("matchID", mMatchId.getText().toString());
         b.putString("matchName", mMatchName.getText().toString());
+        b.putString("matchImage", imageUrl);
         intent.putExtras(b);
         v.getContext().startActivity(intent);
     }

@@ -1,6 +1,7 @@
 package com.notpad.hihimeow;
 
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,9 +13,14 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -101,7 +107,7 @@ public class HomeFragment extends Fragment {
                 Meow meow = (Meow) dataObject;
                 String meowID = meow.getMeowID();
                 mDatabase.child("Meows").child(meowID).child("connections").child("yep").child(currMeow.getUid()).setValue(true);
-                isConnectionMatch(meowID);
+                isConnectionMatch(meow);
             }
 
             @Override
@@ -127,8 +133,8 @@ public class HomeFragment extends Fragment {
 
     }
     //check khi 2 người match vào nhau
-    private void isConnectionMatch(String meowID) {
-        DatabaseReference currMeowConnectionDb = mDatabase.child("Meows").child(currMeow.getUid()).child("connections").child("yep").child(meowID);
+    private void isConnectionMatch(final Meow meow) {
+        DatabaseReference currMeowConnectionDb = mDatabase.child("Meows").child(currMeow.getUid()).child("connections").child("yep").child(meow.getMeowID());
         currMeowConnectionDb.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -141,6 +147,9 @@ public class HomeFragment extends Fragment {
                     //set key định nghĩa phòng chat chung của 2 đứa
                     mDatabase.child("Meows").child(dataSnapshot.getKey()).child("connections").child("matches").child(currMeow.getUid()).child("RoomID").setValue(key);
                     mDatabase.child("Meows").child(currMeow.getUid()).child("connections").child("matches").child(dataSnapshot.getKey()).child("RoomID").setValue(key);
+
+                    showDialogMatched(meow);
+
                 }
             }
 
@@ -224,6 +233,43 @@ public class HomeFragment extends Fragment {
 
             }
         });
+    }
+
+    public void showDialogMatched(final Meow meow){
+        final Dialog dialog =  new Dialog(getContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_match_success);
+        dialog.setCanceledOnTouchOutside(false);
+        TextView textNotify = dialog.findViewById(R.id.tvMatchedNotify);
+        ImageView imageNotify = dialog.findViewById(R.id.imgMatchedNotify);
+        Button sayHello = dialog.findViewById(R.id.btMatchedSayHello);
+        Button dismiss = dialog.findViewById(R.id.btMatchedDismiss);
+
+        textNotify.setText("Wow, you and "+ meow.getName()+" matched together");
+        Glide.with(getActivity().getApplication()).load(meow.getProfileImageUrl()).into(imageNotify);
+
+        sayHello.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), MessageActivity.class);
+                dialog.dismiss();
+                Bundle b = new Bundle();
+                b.putString("matchID", meow.getMeowID());
+                b.putString("matchName", meow.getName());
+                b.putString("matchImage", meow.getProfileImageUrl());
+                intent.putExtras(b);
+                startActivity(intent);
+            }
+        });
+
+        dismiss.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 
 

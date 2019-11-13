@@ -86,7 +86,7 @@ public class RegistrationActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(!task.isSuccessful()){
-                            Toast.makeText(RegistrationActivity.this, "Sign Up Error", Toast.LENGTH_SHORT);
+                            Toast.makeText(RegistrationActivity.this, task.getException().toString(), Toast.LENGTH_SHORT);
                         }else{
                             String userId = mAuth.getCurrentUser().getUid();
                             Map meowInfo = new HashMap<>();

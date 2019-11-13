@@ -18,6 +18,10 @@
         android:textSize="30sp"
         android:id="@+id/tvMatchedNotify"
         android:textAlignment="center"
+        android:shadowColor="#000"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="10"
         android:text="Wow, you and Dũng matched together"/>
     <LinearLayout
         android:layout_width="match_parent"
@@ -33,10 +37,10 @@
             android:textStyle="bold"
             android:layout_marginRight="10sp"
             android:textColor="#fff"
-            android:shadowColor="@color/gray"
+            android:shadowColor="#000"
             android:shadowDx="0"
             android:shadowDy="0"
-            android:shadowRadius="4"
+            android:shadowRadius="10"
 
             android:text="Say Hello"/>
         <Button
@@ -49,7 +53,7 @@
             android:textStyle="bold"
             android:layout_marginRight="10sp"
             android:textColor="#fff"
-            android:shadowColor="#"
+            android:shadowColor="#000"
             android:shadowDx="0"
             android:shadowDy="0"
             android:shadowRadius="10"

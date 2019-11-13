@@ -30,6 +30,7 @@
             android:layout_weight="8"
             android:layout_width="0dp"
             android:layout_height="50sp"
+            android:layout_marginLeft="10sp"
             android:hint="message...."
             android:id="@+id/etMessageToSend"
             />

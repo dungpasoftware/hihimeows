@@ -3,13 +3,18 @@ package com.notpad.hihimeow;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.View;
+
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -37,21 +42,28 @@ public class MessageActivity extends AppCompatActivity {
     DatabaseReference mDatabaseRoomsChat;
     DatabaseReference mDatabaseMessage;
     Date currDate;
-    private String currMeowID, coupleMeowID, roomID;
+    private String currMeowID, coupleMeowID,coupleMeowName, roomID;
 
     private EditText mInputMessage;
     private Button mSendMessage;
 
+    private Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_message);
+        toolbar = (Toolbar) findViewById(R.id.tbMessage);
+        setSupportActionBar(toolbar);
 
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
+
         currMeowID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         coupleMeowID = getIntent().getExtras().getString("matchID");
+        coupleMeowName = getIntent().getExtras().getString("matchName");
         mDatabaseRoomsChat = mDatabase.child("Meows").child(currMeowID).child("connections").child("matches").child(coupleMeowID).child("RoomID");
 
 

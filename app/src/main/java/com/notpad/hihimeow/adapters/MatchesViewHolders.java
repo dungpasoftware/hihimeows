@@ -15,14 +15,15 @@ import com.notpad.hihimeow.R;
 
 public class MatchesViewHolders extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-    public TextView mMatchId, mMatchName;
+    public TextView mLastText, mMatchName;
     public ImageView mMatchImage;
     public String imageUrl;
+    public String meowCoupleID;
     public MatchesViewHolders(@NonNull View itemView) {
         super(itemView);
         itemView.setOnClickListener(this);
 
-        mMatchId = (TextView) itemView.findViewById(R.id.tvMatchesId);
+        mLastText = (TextView) itemView.findViewById(R.id.tvMatchesId);
         mMatchName = (TextView) itemView.findViewById(R.id.tvMatchesName);
         mMatchImage = (ImageView) itemView.findViewById(R.id.imgMatchesImage);
     }
@@ -31,7 +32,7 @@ public class MatchesViewHolders extends RecyclerView.ViewHolder implements View.
     public void onClick(View v) {
         Intent intent = new Intent(v.getContext(), MessageActivity.class);
         Bundle b = new Bundle();
-        b.putString("matchID", mMatchId.getText().toString());
+        b.putString("matchID", meowCoupleID);
         b.putString("matchName", mMatchName.getText().toString());
         b.putString("matchImage", imageUrl);
         intent.putExtras(b);

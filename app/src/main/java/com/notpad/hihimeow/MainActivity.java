@@ -46,10 +46,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE); //will hide the title
-        getSupportActionBar().hide(); // hide the title bar
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN); //enable full screen
 
         setContentView(R.layout.activity_main);
 
@@ -66,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         spaceNavigationView.addSpaceItem(new SpaceItem("", R.drawable.ic_settings_black_24dp));
         spaceNavigationView.addSpaceItem(new SpaceItem("", R.drawable.ic_chat_black_24dp));
         spaceNavigationView.setCentreButtonSelectable(true);
+        spaceNavigationView.setCentreButtonSelected();
 
 
         spaceNavigationView.setSpaceOnClickListener(new SpaceOnClickListener() {

@@ -29,7 +29,7 @@
             android:background="@drawable/background_border_white"
             android:orientation="vertical">
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_width="150sp"
                 android:layout_height="150sp"
                 android:layout_gravity="center"

@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
 
@@ -14,8 +15,11 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -42,10 +46,12 @@ public class MessageActivity extends AppCompatActivity {
     DatabaseReference mDatabaseRoomsChat;
     DatabaseReference mDatabaseMessage;
     Date currDate;
-    private String currMeowID, coupleMeowID,coupleMeowName, roomID;
+    private String currMeowID, coupleMeowID,coupleMeowName, roomID, coupleMeowImage;
 
     private EditText mInputMessage;
     private Button mSendMessage;
+    private TextView mMeowName;
+    private ImageView mMeowImage;
 
     private Toolbar toolbar;
 
@@ -56,6 +62,7 @@ public class MessageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_message);
         toolbar = (Toolbar) findViewById(R.id.tbMessage);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("");
 
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -64,6 +71,7 @@ public class MessageActivity extends AppCompatActivity {
         currMeowID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         coupleMeowID = getIntent().getExtras().getString("matchID");
         coupleMeowName = getIntent().getExtras().getString("matchName");
+        coupleMeowImage = getIntent().getExtras().getString("matchImage");
         mDatabaseRoomsChat = mDatabase.child("Meows").child(currMeowID).child("connections").child("matches").child(coupleMeowID).child("RoomID");
 
 
@@ -73,6 +81,11 @@ public class MessageActivity extends AppCompatActivity {
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mInputMessage = (EditText) findViewById(R.id.etMessageToSend);
         mSendMessage = (Button) findViewById(R.id.btSendMessage);
+        mMeowImage = (ImageView) findViewById(R.id.imgImageInMessage);
+        mMeowName = (TextView) findViewById(R.id.tvMeowNameInMessage);
+
+        mMeowName.setText(coupleMeowName);
+        Glide.with(getApplication()).load(coupleMeowImage).into(mMeowImage);
 
         mRecyclerView.setNestedScrollingEnabled(false);
         mRecyclerView.setHasFixedSize(false);
@@ -93,15 +106,18 @@ public class MessageActivity extends AppCompatActivity {
 
     private void sendMessage() {
         String messageText = mInputMessage.getText().toString();
-        currDate = new Date();
-        String currTime = String.valueOf(currDate.getTime());
-        if(!messageText.isEmpty()){
-            Map newMessage =  new HashMap();
-            newMessage.put("createdByMeow", currMeowID);
-            newMessage.put("message", messageText);
-            mDatabaseMessage.child(currTime).updateChildren(newMessage);
+        if(!messageText.trim().isEmpty()){
+            currDate = new Date();
+            String currTime = String.valueOf(currDate.getTime());
+            if(!messageText.isEmpty()){
+                Map newMessage =  new HashMap();
+                newMessage.put("createdByMeow", currMeowID);
+                newMessage.put("message", messageText);
+                mDatabaseMessage.child(currTime).updateChildren(newMessage);
+            }
+            mInputMessage.setText("");
         }
-        mInputMessage.setText("");
+
 
     }
 

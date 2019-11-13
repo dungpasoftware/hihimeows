@@ -37,7 +37,7 @@ public class MatchesAdapter  extends RecyclerView.Adapter<MatchesViewHolders> {
 
     @Override
     public void onBindViewHolder(@NonNull MatchesViewHolders holder, int position) {
-        holder.mMatchId.setText((matchesList.get(position).getMeowID()));
+        holder.mMatchId.setText((matchesList.get(position).getLastMessage()));
         holder.mMatchName.setText((matchesList.get(position).getMeowName()));
         String imageProfile = matchesList.get(position).getMeowImageProfile();
         holder.imageUrl = imageProfile;

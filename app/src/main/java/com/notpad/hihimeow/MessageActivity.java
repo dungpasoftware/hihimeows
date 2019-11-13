@@ -113,6 +113,15 @@ public class MessageActivity extends AppCompatActivity {
                 newMessage.put("createdByMeow", currMeowID);
                 newMessage.put("message", messageText);
                 mDatabaseMessage.child(currTime).updateChildren(newMessage);
+                Map history = new HashMap();
+                history.put("lastTime", currTime);
+                history.put("lastMessage", messageText);
+                mDatabase.child("Meows").child(currMeowID).child("connections").child("matches").child(coupleMeowID).updateChildren(history);
+                mDatabase.child("Meows").child(coupleMeowID).child("connections").child("matches").child(currMeowID).updateChildren(history);
+
+
+
+
             }
             mInputMessage.setText("");
         }
@@ -125,9 +134,9 @@ public class MessageActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
-                    System.out.println("---------------co data ca lang oi");
+
                     roomID = dataSnapshot.getValue().toString();
-                    System.out.println("----------------roomID"+ roomID);
+
                     //tạo đường dẫn tới phòng chat
                     mDatabaseMessage = mDatabase.child("Messages").child(roomID);
                     getChatMessages();

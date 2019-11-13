@@ -97,6 +97,7 @@ public class MatchesFragment extends Fragment {
                     String meowID = dataSnapshot.getKey();
                     String name = "";
                     String profileImageUrl = "";
+                    String lastMessage = "";
 
                     if(dataSnapshot.child("name").getValue() != null){
                         name = dataSnapshot.child("name").getValue().toString();
@@ -104,7 +105,10 @@ public class MatchesFragment extends Fragment {
                     if(dataSnapshot.child("profileImageUrl").getValue() != null){
                         profileImageUrl = dataSnapshot.child("profileImageUrl").getValue().toString();
                     }
-                    Matches matches = new Matches(meowID, name, profileImageUrl);
+                    if(dataSnapshot.child("connections").child("matches").child(currMeowID).child("lastMessage").getValue() != null){
+                        lastMessage = dataSnapshot.child("connections").child("matches").child(currMeowID).child("lastMessage").getValue().toString();
+                    }
+                    Matches matches = new Matches(meowID, name, profileImageUrl, lastMessage);
                     resultMatches.add(matches);
                     mAdapter.notifyDataSetChanged();
                 }
